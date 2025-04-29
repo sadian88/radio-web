@@ -1,0 +1,109 @@
+<section class="hero">
+  <div class="hero-content">
+    <div class="welcome-text">Bienvenidos a</div>
+    <h1>EbenezerStereo 88.2 Fm.</h1>
+    
+    <button class="play-button">
+      <div class="play-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="currentColor">
+          <polygon points="5 3 19 12 5 21 5 3"></polygon>
+        </svg>
+      </div>
+    </button>
+
+    <div class="frequency">
+      88.2 FM - La Paz - Cesar - Colombia
+    </div>
+  </div>
+</section>
+
+<style>
+  .hero {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    color: white;
+    padding: 2rem;
+    position: relative;
+  }
+
+  .hero::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(to bottom, rgba(0,0,0,0.3), rgba(0,0,0,0.7));
+    z-index: 1;
+  }
+
+  .hero-content {
+    position: relative;
+    z-index: 2;
+    max-width: 800px;
+  }
+
+  .welcome-text {
+    display: inline-block;
+    background: #ff3e3e;
+    padding: 0.5rem 1rem;
+    font-weight: 500;
+    margin-bottom: 1rem;
+  }
+
+  h1 {
+    font-size: 4rem;
+    font-weight: 700;
+    line-height: 1.2;
+    margin: 0 0 2rem;
+  }
+
+  .play-button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    margin: 2rem 0;
+    transition: transform 0.2s;
+  }
+
+  .play-button:hover {
+    transform: scale(1.1);
+  }
+
+  .play-icon {
+    width: 120px;
+    height: 120px;
+    background: #ff3e3e;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    margin: 0 auto;
+  }
+
+  .frequency {
+    font-size: 1.5rem;
+    font-weight: 500;
+    opacity: 0.9;
+  }
+
+  @media (max-width: 768px) {
+    h1 {
+      font-size: 2.5rem;
+    }
+
+    .play-icon {
+      width: 80px;
+      height: 80px;
+    }
+
+    .frequency {
+      font-size: 1.25rem;
+    }
+  }
+</style> 

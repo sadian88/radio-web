@@ -1,0 +1,170 @@
+---
+import { Image } from 'astro:assets';
+import Header from '../components/Header.astro';
+import Player from '../components/Player.astro';
+import AudioPlayer from '../components/AudioPlayer.astro';
+import VolumeControl from '../components/VolumeControl.astro';
+import MobileMenu from '../components/MobileMenu.astro';
+import Programacion from '../components/Programacion.astro';
+
+const Programas = [
+  {
+    titulo: "Devocional Ebenezer",
+    hora: "12:30",
+    hasta: "13:00",
+    dia: "Martes",
+    background: "/backgrounds/midnight.jpg"
+  },
+  {
+    titulo: "Tardes con Dios",
+    hora: "13:30",
+    hasta: "14:00",
+    dia: "Martes",
+    background: "/backgrounds/morning.jpg"
+  },
+  {
+    titulo: "Reflexiones",
+    hora: "14:30",
+    hasta: "15:00",
+    dia: "Martes",
+    background: "/backgrounds/noon.jpg"
+  },
+  {
+    titulo: "Jovenes Vivos",
+    hora: "15:30",
+    hasta: "16:00",
+    dia: "Martes",
+    background: "/backgrounds/evening.jpg"
+  },
+  {
+    titulo: "Ebenezer Radio",
+    hora: "",
+    hasta: "",
+    dia: "",
+    background: "/backgrounds/default.jpg"
+  }
+];
+
+// Función para convertir hora en formato "HH:mm" a minutos desde medianoche
+const horaAMinutos = (hora: string): number => {
+  if (!hora) return -1;
+  const [horas, minutos] = hora.split(':').map(Number);
+  return horas * 60 + minutos;
+};
+
+// Función para obtener el programa actual
+const getCurrentProgram = () => {
+  const now = new Date();
+  const currentDay = now.toLocaleDateString('es-ES', { weekday: 'long' });
+  const currentHours = now.getHours();
+  const currentMinutes = now.getMinutes();
+  const currentTimeInMinutes = currentHours * 60 + currentMinutes;
+  
+  const programaActual = Programas.find(programa => {
+    if (!programa.dia || !programa.hora || !programa.hasta) return false;
+    
+    const inicioMinutos = horaAMinutos(programa.hora);
+    const finMinutos = horaAMinutos(programa.hasta);
+    
+    return programa.dia.toLowerCase() === currentDay.toLowerCase() && 
+           currentTimeInMinutes >= inicioMinutos && 
+           currentTimeInMinutes < finMinutos;
+  });
+
+  return programaActual || Programas[Programas.length - 1]; // Retorna el programa por defecto si no hay coincidencia
+};
+
+const programaActual = getCurrentProgram();
+const backgroundSrc = programaActual.background;
+---
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <link rel="icon" type="image/svg+xml" href="/images/logo.png" />
+    <meta name="viewport" content="width=device-width" />
+    <meta name="generator" content={Astro.generator} />
+    <title>{programaActual.titulo} - Radio Vida</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  </head>
+  <body>
+    <div class="background">
+      <Image src={backgroundSrc} width={1920} height={1080} alt="" />
+    </div>
+    
+    <Header />
+    <MobileMenu />
+    <main id="inicio">
+      <div class="hero">
+        <slot />
+      </div>
+    </main>
+    
+    <Player currentProgram={programaActual}>
+      <VolumeControl slot="volume-control" />
+    </Player>
+
+    <Programacion />
+    
+
+    <AudioPlayer />
+  </body>
+</html>
+
+<style is:global>
+  :root {
+    --primary: #ff3e3e;
+    --primary-dark: #ff2525;
+  }
+
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  html {
+    font-family: 'Inter', system-ui, sans-serif;
+    background: #000;
+    color: white;
+  }
+
+  body {
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  .background {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: -1;
+  }
+
+  .background img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  main {
+    padding-top: 80px; /* Header height */
+    padding-bottom: 100px; /* Player height */
+    min-height: 100vh;
+  }
+
+  button {
+    font-family: inherit;
+  }
+
+  @media (max-width: 768px) {
+    main {
+      padding-top: 60px;
+      padding-bottom: 80px;
+    }
+  }
+</style> 

@@ -1,0 +1,141 @@
+---
+const Programas = [
+  {
+    titulo: "Devocional Ebenezer",
+    hora: "12:30",
+    hasta: "13:00",
+    dia: "Martes",
+    background: "/backgrounds/midnight.jpg"
+  },
+  {
+    titulo: "Tardes con Dios",
+    hora: "13:30",
+    hasta: "14:00",
+    dia: "Martes",
+    background: "/backgrounds/morning.jpg"
+  },
+  {
+    titulo: "Reflexiones",
+    hora: "14:30",
+    hasta: "15:00",
+    dia: "Martes",
+    background: "/backgrounds/noon.jpg"
+  },
+  {
+    titulo: "Jovenes Vivos",
+    hora: "15:30",
+    hasta: "16:00",
+    dia: "Martes",
+    background: "/backgrounds/evening.jpg"
+  },
+  {
+    titulo: "Ebenezer Radio",
+    hora: "",
+    hasta: "",
+    dia: "",
+    background: "/backgrounds/default.jpg"
+  }
+];
+---
+
+<section class="programacion" id="programacion">
+  <div class="container">
+    <h2>Programación</h2>
+    <div class="programas-grid">
+      {Programas.map((programa) => (
+        <div class="programa-card" style={`background-image: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url(${programa.background})`}>
+          <h3>{programa.titulo}</h3>
+          {programa.hora && programa.hasta && (
+            <div class="horario">
+              <span class="hora">{programa.hora} - {programa.hasta}</span>
+              <span class="dia">{programa.dia}</span>
+            </div>
+          )}
+        </div>
+      ))}
+    </div>
+  </div>
+</section>
+
+<style>
+  .programacion {
+    padding: 4rem 0;
+    background: var(--background);
+    color: white;
+  }
+
+  .container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 1rem;
+  }
+
+  h2 {
+    font-size: 2.5rem;
+    margin-bottom: 2rem;
+    text-align: center;
+  }
+
+  .programas-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 2rem;
+  }
+
+  .programa-card {
+    position: relative;
+    background-size: cover;
+    background-position: center;
+    border-radius: 1rem;
+    padding: 2rem;
+    min-height: 200px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    transition: transform 0.3s ease;
+  }
+
+  .programa-card:hover {
+    transform: translateY(-5px);
+  }
+
+  .programa-card h3 {
+    font-size: 1.5rem;
+    margin: 0;
+    color: white;
+  }
+
+  .horario {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .hora {
+    font-size: 1.2rem;
+    font-weight: 500;
+  }
+
+  .dia {
+    font-size: 0.9rem;
+    opacity: 0.8;
+  }
+
+  @media (max-width: 768px) {
+    .programacion {
+      padding: 2rem 0;
+    }
+
+    h2 {
+      font-size: 2rem;
+    }
+
+    .programas-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .programa-card {
+      min-height: 180px;
+    }
+  }
+</style> 

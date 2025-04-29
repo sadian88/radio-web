@@ -1,0 +1,101 @@
+---
+---
+<script>
+  import audioStore from '../stores/audioStore.js';
+
+  class AudioController {
+    private playButtons: NodeListOf<HTMLButtonElement>;
+
+    constructor() {
+      this.playButtons = document.querySelectorAll('.play-button');
+      this.initializeEventListeners();
+    }
+
+    private initializeEventListeners() {
+      this.playButtons.forEach(button => {
+        button.addEventListener('click', () => {
+          audioStore.togglePlay();
+        });
+      });
+
+      // Suscribirse a cambios en el estado del audio
+      audioStore.subscribe(({ isPlaying }) => {
+        this.updatePlayButtons(isPlaying);
+      });
+    }
+
+    private updatePlayButtons(isPlaying: boolean) {
+      this.playButtons.forEach(button => {
+        const icon = button.querySelector('svg');
+        if (icon) {
+          if (isPlaying) {
+            icon.innerHTML = '<rect x="6" y="4" width="4" height="16" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></rect><rect x="14" y="4" width="4" height="16" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></rect>';
+          } else {
+            icon.innerHTML = '<polygon points="5 3 19 12 5 21 5 3" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></polygon>';
+          }
+        }
+        button.setAttribute('aria-label', isPlaying ? 'Pausar' : 'Reproducir');
+        button.setAttribute('title', isPlaying ? 'Pausar' : 'Reproducir');
+      });
+    }
+  }
+
+  // Inicializar el controlador cuando el DOM esté listo
+  document.addEventListener('DOMContentLoaded', () => {
+    new AudioController();
+  });
+</script>
+
+<style>
+  :root {
+    --primary: #ff3e3e;
+    --primary-dark: #ff2525;
+  }
+
+  .play-button {
+    background: var(--primary);
+    border: none;
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    color: white;
+    transition: all 0.3s ease;
+  }
+
+  .play-button:hover {
+    background: var(--primary-dark);
+    transform: scale(1.05);
+  }
+
+  .play-button:active {
+    transform: scale(0.95);
+  }
+
+  .play-button svg {
+    width: 24px;
+    height: 24px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  @media (max-width: 768px) {
+    .play-button {
+      width: 42px;
+      height: 42px;
+    }
+
+    .play-button svg {
+      width: 20px;
+      height: 20px;
+    }
+  }
+</style>
+
+<!-- Este componente no renderiza nada visualmente, solo proporciona la funcionalidad --> 

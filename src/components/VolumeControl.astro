@@ -1,0 +1,121 @@
+<div class="volume-control">
+  <button class="mute-button" id="volumeControlMute">
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" class="volume-high">
+      <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+      <path d="M15.54 8.46a5 5 0 0 1 0 7.07"></path>
+      <path d="M19.07 4.93a10 10 0 0 1 0 14.14"></path>
+    </svg>
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" class="volume-muted" style="display: none;">
+      <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+      <line x1="23" y1="9" x2="17" y2="15"></line>
+      <line x1="17" y1="9" x2="23" y2="15"></line>
+    </svg>
+  </button>
+  <input 
+    type="range" 
+    min="0" 
+    max="100" 
+    value="100" 
+    class="volume-slider"
+    id="volumeSlider"
+  />
+</div>
+
+<script>
+  import audioStore from '../stores/audioStore.js';
+
+  const volumeSlider = document.querySelector('.volume-slider') as HTMLInputElement;
+  const muteButton = document.querySelector('.mute-button');
+  const volumeHigh = muteButton?.querySelector('.volume-high');
+  const volumeMuted = muteButton?.querySelector('.volume-muted');
+
+  // Actualizar la UI cuando cambie el estado
+  audioStore.subscribe(({ volume, isMuted }) => {
+    if (volumeSlider) {
+      volumeSlider.value = (volume * 100).toString();
+    }
+    if (volumeHigh && volumeMuted) {
+      volumeHigh.style.display = isMuted ? 'none' : 'block';
+      volumeMuted.style.display = isMuted ? 'block' : 'none';
+    }
+  });
+
+  // Event listeners
+  volumeSlider?.addEventListener('input', (e) => {
+    const target = e.target as HTMLInputElement;
+    const value = parseFloat(target.value) / 100;
+    audioStore.setVolume(value);
+  });
+
+  muteButton?.addEventListener('click', () => {
+    audioStore.toggleMute();
+  });
+</script>
+
+<style>
+  .volume-control {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    min-width: 150px;
+  }
+
+  .mute-button {
+    background: none;
+    border: none;
+    color: white;
+    cursor: pointer;
+    padding: 0.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: color 0.2s;
+  }
+
+  .mute-button:hover {
+    color: var(--primary);
+  }
+
+  .volume-slider {
+    width: 100px;
+    height: 4px;
+    -webkit-appearance: none;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 2px;
+    outline: none;
+  }
+
+  .volume-slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: white;
+    cursor: pointer;
+    transition: background 0.2s;
+  }
+
+  .volume-slider::-webkit-slider-thumb:hover {
+    background: var(--primary);
+  }
+
+  .volume-slider::-moz-range-thumb {
+    width: 12px;
+    height: 12px;
+    border: none;
+    border-radius: 50%;
+    background: white;
+    cursor: pointer;
+    transition: background 0.2s;
+  }
+
+  .volume-slider::-moz-range-thumb:hover {
+    background: var(--primary);
+  }
+
+  @media (max-width: 768px) {
+    .volume-slider {
+      width: 80px;
+    }
+  }
+</style> 
