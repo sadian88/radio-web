@@ -89,7 +89,10 @@ const Programas = [
 
   .programa-card {
     position: relative;
-    background-image: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), var(--bg-image);
+    background-image: linear-gradient(
+      rgba(2, 31, 99, 0.85),
+      rgba(0, 0, 0, 0.95)
+    ), var(--bg-image);
     background-size: cover;
     background-position: center;
     border-radius: 1rem;
@@ -97,6 +100,7 @@ const Programas = [
     min-height: 200px;
     overflow: hidden;
     transition: transform 0.3s ease;
+    border: 1px solid rgba(5, 79, 252, 0.15);
   }
 
   .programa-card::before {
@@ -106,16 +110,21 @@ const Programas = [
     left: 0;
     right: 0;
     bottom: 0;
-    background: linear-gradient(rgba(13, 120, 251, 0.45), rgba(0, 0, 0, 0.7));
-    transition: opacity 0.3s ease;
+    background: linear-gradient(
+      rgba(5, 79, 252, 0.2),
+      rgba(2, 31, 99, 0.9)
+    );
+    transition: all 0.3s ease;
+    opacity: 0;
   }
 
   .programa-card:hover {
     transform: translateY(-5px);
+    border-color: rgba(5, 79, 252, 0.3);
   }
 
   .programa-card:hover::before {
-    background: linear-gradient(rgba(0, 0, 0, 0), rgba(255, 255, 255, 0));
+    opacity: 1;
   }
 
   .programa-content {

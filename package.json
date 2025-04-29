@@ -10,6 +10,10 @@
     "astro": "astro"
   },
   "dependencies": {
-    "astro": "^5.7.9"
+    "astro": "^5.7.9",
+    "get-audio-duration": "^4.0.1"
+  },
+  "devDependencies": {
+    "@types/node": "^22.15.3"
   }
 }

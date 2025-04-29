@@ -1,0 +1,287 @@
+---
+import { getMP3Files } from '../utils/audioUtils';
+
+// Obtener la lista de podcasts dinámicamente
+const podcasts = await getMP3Files();
+---
+
+<section class="podcast-section" id="podcast">
+  <div class="container">
+    <h2>Podcast</h2>
+    <p class="section-description">Disfruta nuestros podcast más recientes</p>
+    {podcasts.length > 0 ? (
+      <div class="podcast-list">
+        <div class="podcast-scroll-container">
+          {podcasts.map((podcast) => (
+            <div class="podcast-item" data-podcast-id={podcast.id} data-podcast-url={podcast.url}>
+              <div class="play-button">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                  <polygon points="5 3 19 12 5 21 5 3"></polygon>
+                </svg>
+              </div>
+              <div class="podcast-info">
+                <h3>{podcast.title}</h3>
+                <span class="category">{podcast.category}</span>
+              </div>
+              <div class="duration">{podcast.duration}</div>
+            </div>
+          ))}
+        </div>
+      </div>
+    ) : (
+      <div class="no-podcasts">
+        <p>No se encontraron archivos de audio en la carpeta mp3.</p>
+      </div>
+    )}
+  </div>
+</section>
+
+<style>
+  .podcast-section {
+    padding: 4rem 0 6rem 0;
+    background: linear-gradient(135deg, rgba(2, 31, 99, 0.95) 0%, rgba(5, 79, 252, 0.8) 100%);
+    color: white;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .podcast-section::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: url('/images/audio-wave.svg') center/cover no-repeat;
+    opacity: 0.1;
+    pointer-events: none;
+  }
+
+  .container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 1rem;
+    position: relative;
+    z-index: 1;
+  }
+
+  h2 {
+    font-size: 2.5rem;
+    margin-bottom: 2rem;
+    text-align: center;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    position: relative;
+  }
+
+  h2::after {
+    content: '';
+    display: block;
+    width: 60px;
+    height: 3px;
+    background: var(--primary);
+    margin: 0.5rem auto;
+    border-radius: 2px;
+  }
+
+  .section-description {
+    text-align: center;
+    color: rgba(255, 255, 255, 0.8);
+    margin-bottom: 2rem;
+    font-size: 1.1rem;
+  }
+
+  .podcast-list {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 1rem;
+    overflow: hidden;
+    backdrop-filter: blur(10px);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+    height: calc(4 * 5.5rem); /* 4 items * altura de cada item */
+    display: flex;
+    flex-direction: column;
+  }
+
+  .podcast-scroll-container {
+    overflow-y: auto;
+    height: 100%;
+    padding-right: 4px;
+  }
+
+  .podcast-scroll-container::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  .podcast-scroll-container::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 3px;
+  }
+
+  .podcast-scroll-container::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.3);
+    border-radius: 3px;
+  }
+
+  .podcast-scroll-container::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 255, 255, 0.4);
+  }
+
+  .podcast-item {
+    display: flex;
+    align-items: center;
+    padding: 1.5rem;
+    gap: 1.5rem;
+    transition: all 0.3s ease;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    background: linear-gradient(
+      to right,
+      rgba(255, 255, 255, 0.05),
+      rgba(255, 255, 255, 0.02)
+    );
+    height: 5.5rem; /* Altura fija para cada item */
+  }
+
+  .podcast-item:last-child {
+    border-bottom: none;
+  }
+
+  .podcast-item:hover {
+    background: linear-gradient(
+      to right,
+      rgba(255, 255, 255, 0.1),
+      rgba(255, 255, 255, 0.05)
+    );
+    cursor: pointer;
+    transform: translateX(5px);
+  }
+
+  .play-button {
+    width: 40px;
+    height: 40px;
+    background: var(--primary);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 12px rgba(5, 79, 252, 0.3);
+  }
+
+  .play-button svg {
+    width: 20px;
+    height: 20px;
+    color: white;
+    margin-left: 2px;
+  }
+
+  .podcast-item:hover .play-button {
+    transform: scale(1.1);
+    background: var(--primary-dark);
+    box-shadow: 0 6px 16px rgba(5, 79, 252, 0.4);
+  }
+
+  .podcast-info {
+    flex: 1;
+  }
+
+  .podcast-info h3 {
+    font-size: 1.1rem;
+    margin: 0;
+    color: white;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+  }
+
+  .category {
+    font-size: 0.9rem;
+    color: rgba(255, 255, 255, 0.8);
+    display: block;
+    margin-top: 0.25rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  .duration {
+    color: rgba(255, 255, 255, 0.8);
+    font-size: 0.9rem;
+    font-weight: 500;
+  }
+
+  .no-podcasts {
+    text-align: center;
+    padding: 2rem;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 1rem;
+    backdrop-filter: blur(10px);
+  }
+
+  @media (max-width: 768px) {
+    .podcast-section {
+      padding: 2rem 0;
+    }
+
+    h2 {
+      font-size: 2rem;
+    }
+
+    .podcast-list {
+      height: calc(4 * 4.5rem); /* 4 items * altura de cada item en móvil */
+    }
+
+    .podcast-item {
+      height: 4.5rem; /* Altura fija para cada item en móvil */
+      padding: 1rem;
+    }
+
+    .play-button {
+      width: 36px;
+      height: 36px;
+    }
+
+    .play-button svg {
+      width: 18px;
+      height: 18px;
+    }
+
+    .podcast-info h3 {
+      font-size: 1rem;
+    }
+
+    .category, .duration {
+      font-size: 0.8rem;
+    }
+  }
+</style>
+
+<script>
+  import podcastStore from '../stores/podcastStore.js';
+
+  const podcastItems = document.querySelectorAll('.podcast-item');
+
+  // Actualizar UI cuando cambie el estado
+  podcastStore.subscribe(({ isPlaying, currentPodcast }) => {
+    podcastItems.forEach(item => {
+      const playButton = item.querySelector('.play-button');
+      const svg = playButton.querySelector('svg');
+      const podcastId = parseInt(item.dataset.podcastId);
+
+      if (currentPodcast === podcastId && isPlaying) {
+        svg.innerHTML = '<rect x="6" y="4" width="4" height="16"></rect><rect x="14" y="4" width="4" height="16"></rect>';
+        item.classList.add('playing');
+      } else {
+        svg.innerHTML = '<polygon points="5 3 19 12 5 21 5 3"></polygon>';
+        item.classList.remove('playing');
+      }
+    });
+  });
+
+  // Event listeners para los items
+  podcastItems.forEach(item => {
+    item.addEventListener('click', () => {
+      const podcastId = parseInt(item.dataset.podcastId);
+      const podcastUrl = item.dataset.podcastUrl;
+      podcastStore.playPodcast(podcastUrl, podcastId);
+    });
+  });
+</script> 
