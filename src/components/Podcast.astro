@@ -7,17 +7,24 @@ const podcasts = await getMP3Files();
 
 <section class="podcast-section" id="podcast">
   <div class="container">
-    <h2>Podcast</h2>
-    <p class="section-description">Disfruta nuestros podcast más recientes</p>
+    <h2>Predicas</h2>
+    <p class="section-description">Disfruta nuestras Predicas más recientes</p>
     {podcasts.length > 0 ? (
       <div class="podcast-list">
         <div class="podcast-scroll-container">
           {podcasts.map((podcast) => (
             <div class="podcast-item" data-podcast-id={podcast.id} data-podcast-url={podcast.url}>
-              <div class="play-button">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
-                  <polygon points="5 3 19 12 5 21 5 3"></polygon>
-                </svg>
+              <div class="podcast-controls">
+                <button class="play-button-podcast">
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                    <polygon points="5 3 19 12 5 21 5 3"></polygon>
+                  </svg>
+                </button>
+                <button class="stop-button-podcast">
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                    <rect x="6" y="6" width="12" height="12"></rect>
+                  </svg>
+                </button>
               </div>
               <div class="podcast-info">
                 <h3>{podcast.title}</h3>
@@ -52,7 +59,7 @@ const podcasts = await getMP3Files();
     left: 0;
     right: 0;
     bottom: 0;
-    background: url('/images/audio-wave.svg') center/cover no-repeat;
+    background: url('/images/audio-wave.png') center/cover no-repeat;
     opacity: 0.1;
     pointer-events: none;
   }
@@ -155,30 +162,53 @@ const podcasts = await getMP3Files();
     transform: translateX(5px);
   }
 
-  .play-button {
+  .podcast-controls {
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+  }
+
+  .play-button-podcast,
+  .stop-button-podcast {
     width: 40px;
     height: 40px;
-    background: var(--primary);
+    border: none;
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
-    flex-shrink: 0;
+    cursor: pointer;
     transition: all 0.3s ease;
-    box-shadow: 0 4px 12px rgba(5, 79, 252, 0.3);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
   }
 
-  .play-button svg {
+  .play-button-podcast {
+    background: var(--primary);
+  }
+
+  .stop-button-podcast {
+    background: #ff4444;
+  }
+
+  .play-button-podcast svg,
+  .stop-button-podcast svg {
     width: 20px;
     height: 20px;
     color: white;
-    margin-left: 2px;
   }
 
-  .podcast-item:hover .play-button {
+  .play-button-podcast:hover {
     transform: scale(1.1);
     background: var(--primary-dark);
-    box-shadow: 0 6px 16px rgba(5, 79, 252, 0.4);
+  }
+
+  .stop-button-podcast:hover {
+    transform: scale(1.1);
+    background: #ff0000;
+  }
+
+  .play-button-podcast.playing {
+    background: var(--primary-dark);
   }
 
   .podcast-info {
@@ -234,12 +264,14 @@ const podcasts = await getMP3Files();
       padding: 1rem;
     }
 
-    .play-button {
+    .play-button-podcast,
+    .stop-button-podcast {
       width: 36px;
       height: 36px;
     }
 
-    .play-button svg {
+    .play-button-podcast svg,
+    .stop-button-podcast svg {
       width: 18px;
       height: 18px;
     }
@@ -255,33 +287,70 @@ const podcasts = await getMP3Files();
 </style>
 
 <script>
-  import podcastStore from '../stores/podcastStore.js';
-
   const podcastItems = document.querySelectorAll('.podcast-item');
+  let currentAudio = null;
+  let currentPlayingItem = null;
 
-  // Actualizar UI cuando cambie el estado
-  podcastStore.subscribe(({ isPlaying, currentPodcast }) => {
-    podcastItems.forEach(item => {
-      const playButton = item.querySelector('.play-button');
-      const svg = playButton.querySelector('svg');
-      const podcastId = parseInt(item.dataset.podcastId);
+  function handlePlay(item, podcastUrl) {
+    const playButton = item.querySelector('.play-button-podcast');
+    const stopButton = item.querySelector('.stop-button-podcast');
 
-      if (currentPodcast === podcastId && isPlaying) {
-        svg.innerHTML = '<rect x="6" y="4" width="4" height="16"></rect><rect x="14" y="4" width="4" height="16"></rect>';
-        item.classList.add('playing');
-      } else {
-        svg.innerHTML = '<polygon points="5 3 19 12 5 21 5 3"></polygon>';
-        item.classList.remove('playing');
+    // Si hay un audio reproduciéndose, detenerlo
+    if (currentAudio) {
+      currentAudio.pause();
+      currentAudio = null;
+      if (currentPlayingItem) {
+        const prevPlayButton = currentPlayingItem.querySelector('.play-button-podcast');
+        prevPlayButton.classList.remove('playing');
       }
-    });
-  });
+    }
 
-  // Event listeners para los items
+    // Reproducir el nuevo audio
+    currentAudio = new Audio(podcastUrl);
+    currentAudio.play();
+    currentPlayingItem = item;
+    playButton.classList.add('playing');
+
+    // Evento cuando el audio termina
+    currentAudio.onended = () => {
+      playButton.classList.remove('playing');
+      currentAudio = null;
+      currentPlayingItem = null;
+    };
+  }
+
+  function handleStop() {
+    if (currentAudio) {
+      currentAudio.pause();
+      currentAudio = null;
+      if (currentPlayingItem) {
+        const playButton = currentPlayingItem.querySelector('.play-button-podcast');
+        playButton.classList.remove('playing');
+        currentPlayingItem = null;
+      }
+    }
+  }
+
   podcastItems.forEach(item => {
+    const playButton = item.querySelector('.play-button-podcast');
+    const stopButton = item.querySelector('.stop-button-podcast');
+    const podcastUrl = item.dataset.podcastUrl;
+
+    // Evento para el botón de play
+    playButton.addEventListener('click', (e) => {
+      e.stopPropagation();
+      handlePlay(item, podcastUrl);
+    });
+
+    // Evento para el botón de stop
+    stopButton.addEventListener('click', (e) => {
+      e.stopPropagation();
+      handleStop();
+    });
+
+    // Evento para el resto del item
     item.addEventListener('click', () => {
-      const podcastId = parseInt(item.dataset.podcastId);
-      const podcastUrl = item.dataset.podcastUrl;
-      podcastStore.playPodcast(podcastUrl, podcastId);
+      handlePlay(item, podcastUrl);
     });
   });
 </script> 

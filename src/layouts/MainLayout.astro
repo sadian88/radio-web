@@ -43,6 +43,13 @@ const Programas = [
     hasta: "",
     dia: "",
     background: "/backgrounds/default.jpg"
+  },
+  {
+    titulo: "Cierre de Día",
+    hora: "17:00",
+    hasta: "18:00",
+    dia: "Martes",
+    background: "/backgrounds/noon.jpg"
   }
 ];
 
@@ -103,14 +110,16 @@ const backgroundSrc = programaActual.background;
       </div>
     </main>
     
-    <Player currentProgram={programaActual}>
-      <VolumeControl slot="volume-control" />
-    </Player>
+    <AudioPlayer />
 
     <Programacion />
     <Podcast />
 
-    <AudioPlayer />
+    
+
+    <Player currentProgram={programaActual}>
+      <VolumeControl slot="volume-control" />
+    </Player>
   </body>
 </html>
 
