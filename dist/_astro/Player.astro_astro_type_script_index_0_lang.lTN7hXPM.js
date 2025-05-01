@@ -1,0 +1,1 @@
+import{a as e}from"./audioStore.fahFIvsI.js";const t=document.querySelector(".player .play-button"),l=document.querySelector(".player .stop-button");t?.querySelector(".play-icon");e.subscribe(({isPlaying:o})=>{t&&t.classList.toggle("playing",o)});t?.addEventListener("click",()=>{e.togglePlay()});l?.addEventListener("click",()=>{e.stopPlay()});
