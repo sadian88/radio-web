@@ -6,6 +6,7 @@ import AudioPlayer from '../components/AudioPlayer.astro';
 import VolumeControl from '../components/VolumeControl.astro';
 import MobileMenu from '../components/MobileMenu.astro';
 import Programacion from '../components/Programacion.astro';
+import Podcast from '../components/Podcast.astro';
 
 const Programas = [
   {
@@ -42,6 +43,20 @@ const Programas = [
     hasta: "",
     dia: "",
     background: "/backgrounds/default.jpg"
+  },
+  {
+    titulo: "Cierre de Día",
+    hora: "17:00",
+    hasta: "18:00",
+    dia: "Martes",
+    background: "/backgrounds/noon.jpg"
+  },
+    {
+    titulo: "Nuevo de Día",
+    hora: "06:00",
+    hasta: "08:00",
+    dia: "Martes",
+    background: "/backgrounds/noon.jpg"
   }
 ];
 
@@ -102,21 +117,26 @@ const backgroundSrc = programaActual.background;
       </div>
     </main>
     
+    <AudioPlayer />
+
+    <Programacion />
+    <Podcast />
+
+    
+
     <Player currentProgram={programaActual}>
       <VolumeControl slot="volume-control" />
     </Player>
-
-    <Programacion />
-    
-
-    <AudioPlayer />
   </body>
 </html>
 
 <style is:global>
   :root {
-    --primary: #ff3e3e;
-    --primary-dark: #ff2525;
+    --background: #0f0f0f;
+    --text: #ffffff;
+    --primary: rgb(5, 79, 252);
+    --primary-dark: rgb(4, 63, 201);
+    --secondary: #666666;
   }
 
   * {

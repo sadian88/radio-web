@@ -98,6 +98,24 @@ class AudioStore {
     }
   }
 
+  async stopPlay() {
+    try {
+      if (this.audio.src) {
+        this.audio.pause();
+        this.audio.src = '';
+        this.audio.load();
+        this.isPlaying = false;
+        this.isLoading = false;
+        this.notify();
+        console.log('Stream detenido completamente');
+      }
+    } catch (error) {
+      console.error('Error stopping play:', error);
+      this.error = error.message;
+      this.notify();
+    }
+  }
+
   setVolume(value) {
     this.audio.volume = value;
     console.log('Setting volume:', value);

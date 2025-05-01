@@ -35,6 +35,14 @@ const Programas = [
     dia: "",
     background: "/backgrounds/default.jpg"
   }
+  ,
+  {
+    titulo: "Cierre de Día",
+    hora: "17:00",
+    hasta: "18:00",
+    dia: "Martes",
+    background: "/backgrounds/noon.jpg"
+  }
 ];
 ---
 
@@ -43,14 +51,19 @@ const Programas = [
     <h2>Programación</h2>
     <div class="programas-grid">
       {Programas.map((programa) => (
-        <div class="programa-card" style={`background-image: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url(${programa.background})`}>
-          <h3>{programa.titulo}</h3>
-          {programa.hora && programa.hasta && (
-            <div class="horario">
-              <span class="hora">{programa.hora} - {programa.hasta}</span>
-              <span class="dia">{programa.dia}</span>
-            </div>
-          )}
+        <div 
+          class="programa-card" 
+          style={`--bg-image: url(${programa.background})`}
+        >
+          <div class="programa-content">
+            <h3>{programa.titulo}</h3>
+            {programa.hora && programa.hasta && (
+              <div class="horario">
+                <span class="hora">{programa.hora} - {programa.hasta}</span>
+                <span class="dia">{programa.dia}</span>
+              </div>
+            )}
+          </div>
         </div>
       ))}
     </div>
@@ -84,19 +97,51 @@ const Programas = [
 
   .programa-card {
     position: relative;
+    background-image: linear-gradient(
+      rgba(2, 31, 99, 0.85),
+      rgba(0, 0, 0, 0.95)
+    ), var(--bg-image);
     background-size: cover;
     background-position: center;
     border-radius: 1rem;
     padding: 2rem;
     min-height: 200px;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
+    overflow: hidden;
     transition: transform 0.3s ease;
+    border: 1px solid rgba(5, 79, 252, 0.15);
+  }
+
+  .programa-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(
+      rgba(5, 79, 252, 0.2),
+      rgba(2, 31, 99, 0.9)
+    );
+    transition: all 0.3s ease;
+    opacity: 0;
   }
 
   .programa-card:hover {
     transform: translateY(-5px);
+    border-color: rgba(5, 79, 252, 0.3);
+  }
+
+  .programa-card:hover::before {
+    opacity: 1;
+  }
+
+  .programa-content {
+    position: relative;
+    z-index: 1;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
   }
 
   .programa-card h3 {
